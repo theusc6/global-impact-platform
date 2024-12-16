@@ -1,14 +1,21 @@
-# Root main.tf
-
-# Networking module needs to be first since other modules depend on VPC
 module "networking" {
   source = "./modules/networking"
 
+  vpc_name            = "${var.project}-${var.environment}-vpc"
+  vpc_cidr            = var.vpc_cidr
+  availability_zones  = var.availability_zones
+  private_subnet_cidrs = local.private_subnet_cidrs
+  public_subnet_cidrs  = local.public_subnet_cidrs
+  enable_nat_gateway   = true  
+  single_nat_gateway   = false 
+  enable_vpn_gateway   = false 
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+  tags                = var.tags
+  aws_region          = var.aws_region
+  aws_profile         = var.aws_profile
   environment         = var.environment
-  project            = var.project
-  vpc_cidr           = var.vpc_cidr
-  availability_zones = var.availability_zones
-  tags              = var.tags
+  project             = var.project
 }
 
 # Security module
@@ -31,26 +38,23 @@ module "security" {
 # Database module
 module "database" {
   source = "./modules/database"
-  
-  vpc_id               = module.networking.vpc_id
-  private_subnet_ids   = module.networking.private_subnet_ids
-  environment         = var.environment
-  project             = var.project
-  tags               = var.tags
-  kms_key_id         = module.security.kms_key_id
-  multi_az           = var.multi_az
-  postgres_database_name = var.postgres_database_name  # Add this line
+  vpc_id                 = module.networking.vpc_id
+  private_subnet_ids     = module.networking.private_subnet_ids
+  environment           = var.environment
+  tags                  = var.tags
+  postgres_database_name = var.postgres_database_name
+  project                = var.project
 }
 
 # Compute module
 module "compute" {
   source = "./modules/compute"
-  
-  vpc_id               = module.networking.vpc_id
-  private_subnet_ids   = module.networking.private_subnet_ids
-  public_subnet_ids    = module.networking.public_subnet_ids
-  environment         = var.environment
-  project             = var.project
-  tags               = var.tags
-  container_insights  = var.container_insights
+  vpc_id             = module.networking.vpc_id
+  private_subnet_ids = module.networking.private_subnet_ids
+  public_subnet_ids  = module.networking.public_subnet_ids
+  cluster_name       = local.cluster_name    # Add this
+  environment        = var.environment
+  tags              = var.tags
+  container_insights = var.container_insights
+  project            = var.project
 }

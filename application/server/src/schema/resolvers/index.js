@@ -1,6 +1,31 @@
 const Joi = require('joi');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { GraphQLScalarType, Kind } = require('graphql');
+
+const Constraint = new GraphQLScalarType({
+  name: 'Constraint',
+  description: 'Custom scalar type for constraints',
+  serialize(value) {
+    // Implement your serialization logic
+    return value;
+  },
+  parseValue(value) {
+    // Implement your parsing and validation logic
+    if (typeof value !== 'string') {
+      throw new TypeError('Constraint must be a string');
+    }
+    // Add any additional validation logic here
+    return value;
+  },
+  parseLiteral(ast) {
+    if (ast.kind !== Kind.STRING) {
+      throw new TypeError('Constraint must be a string');
+    }
+    // Add any additional validation logic here
+    return ast.value;
+  },
+});
 
 const resolvers = {
   Query: {
@@ -36,6 +61,7 @@ const resolvers = {
       });
     },
   },
+  Constraint,
 };
 
 module.exports = resolvers;

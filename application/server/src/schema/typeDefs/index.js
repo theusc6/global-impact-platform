@@ -1,8 +1,9 @@
 // application/server/src/schema/typeDefs/index.js
-
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  scalar Constraint
+
   directive @auth(requires: Role = USER) on FIELD_DEFINITION
 
   enum Role {

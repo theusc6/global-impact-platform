@@ -1,0 +1,25 @@
+{
+    "name": "global-impact-platform",
+    "version": "0.1.0",
+    "description": "Blockchain-based charitable giving platform using XRP Ledger",
+    "private": true,
+    "scripts": {
+      "start": "echo \"Error: no start script specified\" && exit 1",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/theusc6/global-impact-platform.git"
+    },
+    "keywords": [
+      "charity",
+      "blockchain",
+      "xrp",
+      "donations"
+    ],
+    "author": "",
+    "license": "MIT",
+    "engines": {
+      "node": ">=18.0.0"
+    }
+  }
